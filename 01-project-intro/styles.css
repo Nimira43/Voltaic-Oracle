@@ -17,6 +17,10 @@
   --grey-light-extra: #eee;
 }
 
+html, body, .container-fluid {
+  background-color: var(--dark);
+}
+
 .text-prime {
   color: var(--prime);
 }
@@ -112,3 +116,24 @@
 .bg-grey-light-extra {
   background-color: var(--grey-light-extra);
 }
+
+.text-input {
+  font-size: 1rem;
+  background-color: var(--grey-dark);
+  color: var(--grey-light);
+  border: none;
+  border-radius: 0.25rem;
+}
+
+.text-input:focus {
+  border: none;
+  background-color: var(--grey-dark);
+  color: var(--light);
+  box-shadow: none;
+}
+
+.hash-heading {
+  color: var(--light);
+  font-weight: 300;
+}
+
