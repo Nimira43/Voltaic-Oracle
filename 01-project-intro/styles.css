@@ -138,6 +138,7 @@ html, body, .container-fluid {
 }
 
 .hash-output {
+  padding: 5px;
   background-color: #008080;
   color: #fffcfa;
 }
