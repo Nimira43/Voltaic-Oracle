@@ -137,3 +137,7 @@ html, body, .container-fluid {
   font-weight: 300;
 }
 
+.hash-output {
+  background-color: #008080;
+  color: #fffcfa;
+}
