@@ -5,6 +5,16 @@
   "scripts": {
     "start": "nodemon --watch . --ext html,js,css --exec electron ."
   },
+  "build": {
+    "appId": "com.nimiratech.hashingapp",
+    "productName": "Hashing App",
+    "files": [
+      "**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    }
+  },
   "author": "Nick Rabone",
   "license": "ISC",
   "description": "",
