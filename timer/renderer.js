@@ -13,8 +13,23 @@ function updateDisplay() {
   timerDisplay.textContent = `${minutes}:${seconds}`
 }
 
+function startTimer() {
+  if (isRunning) return
+  isRunning = true
 
-function startTimer() {}
+  timer = setInterval(() => {
+    if (timeLeft > 0) {
+      timeLeft--
+      updateDisplay()
+    } else {
+      clearInterval(timer)
+      isRunning = false
+      new Notification('Time is up', {body: 'Take a breather.'})
+    }
+  }, 1000)
+}
+
+
 function pauseTimer() {}
 function resetTimer() {}
 
