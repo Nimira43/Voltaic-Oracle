@@ -30,8 +30,17 @@ function startTimer() {
 }
 
 
-function pauseTimer() {}
-function resetTimer() {}
+function pauseTimer() {
+  clearInterval(timer)
+  isRunning = false
+}
+
+function resetTimer() {
+  clearInterval(timer)
+  isRunning = false
+  timeLeft = 30 * 60
+  updateDisplay()
+}
 
 startBtn.onclick = startTimer
 pauseBtn.onclick = pauseTimer
