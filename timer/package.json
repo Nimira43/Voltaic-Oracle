@@ -1,9 +1,9 @@
 {
   "name": "timer",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon --ext js,css,html --exec cross-env NODE_ENV=development electron ."
   },
   "author": "Nick Rabone",
   "license": "MIT",
