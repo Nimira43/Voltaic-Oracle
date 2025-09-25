@@ -1,6 +1,7 @@
 const {ipcRenderer} = require('electron')
 
 const timerDisplay = document.getElementById('timer-div')
+
 const startBtn = document.getElementById('start-btn')
 const pauseBtn = document.getElementById('pause-btn')
 const stopBtn = document.getElementById('stop-btn')
@@ -31,7 +32,6 @@ function startTimer() {
   }, 1000)
 }
 
-
 function pauseTimer() {
   clearInterval(timer)
   isRunning = false
@@ -48,4 +48,8 @@ startBtn.onclick = startTimer
 pauseBtn.onclick = pauseTimer
 stopBtn.onclick = resetTimer
 
-
+ipcRenderer.on('timer-control', (event, command) => {
+  if (command === 'start') startTimer()
+  else if (command === 'pause') pauseTimer()
+  else if (command === 'stop') resetTimer()
+})
