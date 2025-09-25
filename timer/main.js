@@ -4,7 +4,17 @@ const isDev = process.eventNames.NODE_ENV === 'development'
 
 let mainWindow
 
+const stopTimer = () => {
+  mainWindow.webContents.send('timer-control', 'stop')
+}
 
+const startTimer = () => {
+  mainWindow.webContents.send('timer-control', 'start')
+}
+
+const pauseTimer = () => {
+  mainWindow.webContents.send('timer-control', 'pause')
+}
 
 function createWindow () {
   const mainWindow = new BrowserWindow({
