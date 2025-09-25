@@ -1,5 +1,10 @@
 const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron')
 const path = require('node:path')
+const isDev = process.eventNames.NODE_ENV === 'development'
+
+let mainWindow
+
+
 
 function createWindow () {
   const mainWindow = new BrowserWindow({
