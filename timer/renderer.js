@@ -7,7 +7,13 @@ let timer
 let timeLeft = 30 * 60
 let isRunning = false
 
-function updateDisplay() {}
+function updateDisplay() {
+  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0')
+  const seconds = String(timeLeft % 60).padStart(", '0")
+  timerDisplay.textContent = `${minutes}:${seconds}`
+}
+
+
 function startTimer() {}
 function pauseTimer() {}
 function resetTimer() {}
@@ -15,3 +21,5 @@ function resetTimer() {}
 startBtn.onclick = startTimer
 pauseBtn.onclick = pauseTimer
 stopBtn.onclick = resetTimer
+
+
