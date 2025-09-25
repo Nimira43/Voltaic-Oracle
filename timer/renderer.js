@@ -6,3 +6,8 @@ const stopBtn = document.getElementById('stop-btn')
 let timer
 let timeLeft = 30 * 60
 let isRunning = false
+
+function updateDisplay() {}
+function startTimer() {}
+function pauseTimer() {}
+function resetTimer() {}
