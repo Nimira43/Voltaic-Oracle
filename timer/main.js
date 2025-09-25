@@ -27,7 +27,50 @@ function createWindow () {
     }
   })
   mainWindow.loadFile('index.html')
+
+  const menu = Menu.buildFromTemplate(menuTemplate)
+  Menu.setApplicationMenu(menu)
+
+  mainWindow.webContents.openDevTools()
 }
+
+const menuTemplate = [
+  {
+    label: 'Timer',
+    submenu: [
+      {
+        label: 'Start',
+        click: startTimer,
+      },
+      {
+        label: 'Pause',
+        click: pauseTimer,
+      },
+      {
+        label: 'Stop',
+        click: stopTimer,
+      },
+    ],
+  },
+  ...(isDev
+    ? [
+        {
+          label: 'View',
+          submenu: [
+            {
+              label: 'Reload',
+              role: 'reload'
+            },
+            {
+              label: 'Show DevTools',
+              role: 'toggledevtools' 
+            }
+          ]
+        }
+      ]
+    : []
+  ),
+]
 
 app.whenReady().then(() => {
   createWindow()
