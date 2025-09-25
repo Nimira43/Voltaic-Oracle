@@ -1,3 +1,5 @@
+const {ipcRenderer} = require('electron')
+
 const timerDisplay = document.getElementById('timer-div')
 const startBtn = document.getElementById('start-btn')
 const pauseBtn = document.getElementById('pause-btn')
