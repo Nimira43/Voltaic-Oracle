@@ -2,3 +2,27 @@
   font-family: 'Poppins', sans-serif;
   font-weight: 300;
 }
+
+.dark-bg {
+  background-color: #111;
+}
+
+.dark-text {
+  color: #111;
+}
+
+.light-bg {
+  background-color: #fffcfa;
+}
+
+.light-text {
+  color: #fffcfa;
+}
+
+.main-bg {
+  background-color: #ff4500;
+}
+
+.main-text {
+  color: #ff4500;
+}
