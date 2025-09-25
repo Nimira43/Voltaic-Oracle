@@ -11,3 +11,7 @@ function updateDisplay() {}
 function startTimer() {}
 function pauseTimer() {}
 function resetTimer() {}
+
+startBtn.onclick = startTimer
+pauseBtn.onclick = pauseTimer
+stopBtn.onclick = resetTimer
