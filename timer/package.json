@@ -7,5 +7,12 @@
   },
   "author": "Nick Rabone",
   "license": "MIT",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "cross-env": "^7.0.3",
+    "electron": "^36.3.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
 }
