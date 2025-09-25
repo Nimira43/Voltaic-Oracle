@@ -26,3 +26,12 @@
 .main-text {
   color: #ff4500;
 }
+
+button {
+  font-weight: 500 !important;
+  text-transform: uppercase;
+}
+
+button:hover {
+  color: #ccc !important;
+}
