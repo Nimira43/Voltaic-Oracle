@@ -17,7 +17,7 @@ const pauseTimer = () => {
 }
 
 function createWindow () {
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 400,
     height: 550,
     webPreferences: {

@@ -12,7 +12,7 @@ let isRunning = false
 
 function updateDisplay() {
   const minutes = String(Math.floor(timeLeft / 60)).padStart(2, '0')
-  const seconds = String(timeLeft % 60).padStart(", '0")
+  const seconds = String(timeLeft % 60).padStart(2, '0')
   timerDisplay.textContent = `${minutes}:${seconds}`
 }
 
