@@ -7,5 +7,9 @@
   },
   "author": "Nick Rabone",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "devDependencies": {
+    "electron": "^36.3.2",
+    "nodemon": "^3.1.10"
+  }
 }
