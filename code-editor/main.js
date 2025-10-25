@@ -49,7 +49,7 @@ ipcMain.on('file-open', (event) => {
 })
 
 ipcMain.on('file-save', (event, content) => {
-  const path = dialog.showOpenDialogSync({
+  const path = dialog.showSaveDialogSync({
     filters: [{
       name: 'Code Files', 
       extensions: ['js', 'css', 'html']
