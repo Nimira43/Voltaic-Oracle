@@ -37,3 +37,8 @@ button:hover {
   color: var(--light);
   font-size: 0.8em;
 }
+
+#editor {
+  flex: 1;
+  position: relative;
+}
