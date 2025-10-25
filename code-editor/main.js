@@ -27,5 +27,15 @@ app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
 
-ipcMain.on('file-open', (event) => {})
+ipcMain.on('file-open', (event) => {
+  const paths = dialog.showOpenDialogSync({
+    properties: ['openFile'],
+    filters: [{
+      name: 'Code Files', 
+      extensions: ['js', 'css', 'html']
+    }]
+  })
+})
+
+
 ipcMain.on('file-save', (event, content) => {})
