@@ -35,6 +35,17 @@ ipcMain.on('file-open', (event) => {
       extensions: ['js', 'css', 'html']
     }]
   })
+
+  if (paths && paths.length > 0) {
+    const path = paths[0]
+    const fileContent = fs.readFileSync(path, 'utf-8')
+    event.returnValue = {
+      content: fileContent,
+      filePath: path
+    }
+  } else {
+    event.returnValue = null
+  }
 })
 
 
