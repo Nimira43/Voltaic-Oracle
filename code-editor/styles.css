@@ -1,3 +1,10 @@
+:root {
+  --main: #ff4500;
+  --main-dark: #a02c02;
+  --light: #fffdfa;
+  --transition: all 0.5s ease-in-out
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -12,13 +19,13 @@ button {
   font-weight: 500;
   text-transform: uppercase;
   padding: 8px;
-  background: #ff4500;
-  color: #fffdfa;
+  background: var(--main);
+  color: var(--light);
   border: none;
   border-radius: 3px;
-  transition: all 0.5s ease-in-out;
+  transition: var(--transition);
 }
 
 button:hover {
-  background-color: #a02c02;
+  background-color: var(--main-dark);
 }
