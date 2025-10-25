@@ -48,5 +48,20 @@ ipcMain.on('file-open', (event) => {
   }
 })
 
+ipcMain.on('file-save', (event, content) => {
+  const path = dialog.showOpenDialogSync({
+    filters: [{
+      name: 'Code Files', 
+      extensions: ['js', 'css', 'html']
+    }]
+  })
 
-ipcMain.on('file-save', (event, content) => {})
+  if (path) {
+    try {
+      fs.writeFileSync(path, content, 'utf-8')
+      event.returnValue = path
+    } catch {
+      event.returnValue = null  
+    }    
+  }
+})
