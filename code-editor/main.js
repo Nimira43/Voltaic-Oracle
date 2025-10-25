@@ -17,6 +17,7 @@ function createWindow () {
 
 app.whenReady().then(() => {
   createWindow()
+  Menu.setApplicationMenu(null)
   app.on('activate', function () {
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
@@ -25,3 +26,6 @@ app.whenReady().then(() => {
 app.on('window-all-closed', function () {
   if (process.platform !== 'darwin') app.quit()
 })
+
+ipcMain.on('file-open', (event) => {})
+ipcMain.on('file-save', (event, content) => {})
