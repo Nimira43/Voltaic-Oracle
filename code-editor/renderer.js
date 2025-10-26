@@ -21,7 +21,11 @@ const updateInfo = () => {
     } else if (path.match(/.js/)) {
       typeDisplayed = 'Javascript'
     }
+
+    editor.setOption('mode', type)
   }
+
+  document.getElementById('type-span').innerHTML = typeDisplayed
 }
 
 const handleNewButton = () => {}
