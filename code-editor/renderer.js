@@ -7,7 +7,12 @@ const updateInfo = () => {
   let typeDisplayed = 'No document loaded.'
   let type = 'javascript'
 
-  
+  if (path) {
+    let filename = path.match(/[^/]+$/)[0]
+    document.getElementById('filename-span').innerHTML = filename
+    document.title = filename
+    
+  }
 }
 
 const handleNewButton = () => {}
