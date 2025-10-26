@@ -8,4 +8,12 @@ const handleNewButton = () => {}
 const handleSaveButton = () => {}
 const handleOpenButton = () => {}
 
-onload = function() {}
+onload = function() {
+  newButton = this.document.getElementById('btn-new')
+  saveButton = this.document.getElementById('btn-save')
+  openButton = this.document.getElementById('btn-open')
+
+  newButton.addEventListener('click', handleNewButton)
+  saveButton.addEventListener('click', handleSaveButton)
+  openButton.addEventListener('click', handleOpenButton)
+}
