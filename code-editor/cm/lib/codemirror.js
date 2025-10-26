@@ -1,20 +1,9 @@
-// CodeMirror, copyright (c) by Marijn Haverbeke and others
-// Distributed under an MIT license: https://codemirror.net/5/LICENSE
-
-// This is CodeMirror (https://codemirror.net/5), a code editor
-// implemented in JavaScript on top of the browser's DOM.
-//
-// You can find some technical background for some of the code below
-// at http://marijnhaverbeke.nl/blog/#cm-internals .
-
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
   typeof define === 'function' && define.amd ? define(factory) :
   (global = global || self, global.CodeMirror = factory());
 }(this, (function () { 'use strict';
 
-  // Kludges for bugs and behavior differences that can't be feature
-  // detected are enabled based on userAgent etc sniffing.
   var userAgent = navigator.userAgent;
   var platform = navigator.platform;
 
@@ -35,7 +24,6 @@
 
   var ios = safari && (/Mobile\/\w+/.test(userAgent) || navigator.maxTouchPoints > 2);
   var android = /Android/.test(userAgent);
-  // This is woefully incomplete. Suggestions for alternative methods welcome.
   var mobile = ios || android || /webOS|BlackBerry|Opera Mini|Opera Mobi|IEMobile/i.test(userAgent);
   var mac = ios || /Mac/.test(platform);
   var chromeOS = /\bCrOS\b/.test(userAgent);
@@ -44,7 +32,6 @@
   var presto_version = presto && userAgent.match(/Version\/(\d*\.\d*)/);
   if (presto_version) { presto_version = Number(presto_version[1]); }
   if (presto_version && presto_version >= 15) { presto = false; webkit = true; }
-  // Some browsers use the wrong event properties to signal cmd/ctrl on OS X
   var flipCtrlCmd = mac && (qtwebkit || presto && (presto_version == null || presto_version < 12.11));
   var captureRightClick = gecko || (ie && ie_version >= 9);
 
@@ -77,7 +64,6 @@
     else if (content) { for (var i = 0; i < content.length; ++i) { e.appendChild(content[i]); } }
     return e
   }
-  // wrapper for elt, which removes the elt from the accessibility tree
   function eltP(tag, content, className, style) {
     var e = elt(tag, content, className, style);
     e.setAttribute("role", "presentation");
@@ -102,7 +88,7 @@
   }; }
 
   function contains(parent, child) {
-    if (child.nodeType == 3) // Android browser always returns false when child is a textnode
+    if (child.nodeType == 3) 
       { child = child.parentNode; }
     if (parent.contains)
       { return parent.contains(child) }
@@ -113,9 +99,6 @@
   }
 
   function activeElt(rootNode) {
-    // IE and Edge may throw an "Unspecified Error" when accessing document.activeElement.
-    // IE < 10 will throw when accessed while the page is loading or in an iframe.
-    // IE > 9 and Edge will throw when accessed in an iframe if document.body is unavailable.
     var doc = rootNode.ownerDocument || rootNode;
     var activeElement;
     try {
@@ -140,9 +123,9 @@
   }
 
   var selectInput = function(node) { node.select(); };
-  if (ios) // Mobile Safari apparently has a bug where select() is broken.
+  if (ios) 
     { selectInput = function(node) { node.selectionStart = 0; node.selectionEnd = node.value.length; }; }
-  else if (ie) // Suppress mysterious IE10 errors
+  else if (ie) 
     { selectInput = function(node) { try { node.select(); } catch(_e) {} }; }
 
   function doc(cm) { return cm.display.wrapper.ownerDocument }
@@ -152,7 +135,6 @@
   }
 
   function rootNode(element) {
-    // Detect modern browsers (2017+).
     return element.getRootNode ? element.getRootNode() : element.ownerDocument
   }
 
@@ -171,8 +153,6 @@
     return target
   }
 
-  // Counts the column offset in a string, taking tabs into account.
-  // Used mostly to find indentation.
   function countColumn(string, end, tabSize, startIndex, startValue) {
     if (end == null) {
       end = string.search(/[^\s\u00a0]/);
@@ -218,18 +198,12 @@
     return -1
   }
 
-  // Number of pixels added to scroller and sizer to hide scrollbar
   var scrollerGap = 50;
 
-  // Returned or thrown by various protocols to signal 'I'm not
-  // handling this'.
   var Pass = {toString: function(){return "CodeMirror.Pass"}};
 
-  // Reused option objects for setSelection & friends
   var sel_dontScroll = {scroll: false}, sel_mouse = {origin: "*mouse"}, sel_move = {origin: "+move"};
 
-  // The inverse of countColumn -- find the offset that corresponds to
-  // a particular column.
   function findColumn(string, goal, tabSize) {
     for (var pos = 0, col = 0;;) {
       var nextTab = string.indexOf("\t", pos);
@@ -295,26 +269,15 @@
     return true
   }
 
-  // Extending unicode characters. A series of a non-extending char +
-  // any number of extending chars is treated as a single unit as far
-  // as editing and measuring is concerned. This is not fully correct,
-  // since some scripts/fonts/browsers also treat other configurations
-  // of code points as a group.
   var extendingChars = /[\u0300-\u036f\u0483-\u0489\u0591-\u05bd\u05bf\u05c1\u05c2\u05c4\u05c5\u05c7\u0610-\u061a\u064b-\u065e\u0670\u06d6-\u06dc\u06de-\u06e4\u06e7\u06e8\u06ea-\u06ed\u0711\u0730-\u074a\u07a6-\u07b0\u07eb-\u07f3\u0816-\u0819\u081b-\u0823\u0825-\u0827\u0829-\u082d\u0900-\u0902\u093c\u0941-\u0948\u094d\u0951-\u0955\u0962\u0963\u0981\u09bc\u09be\u09c1-\u09c4\u09cd\u09d7\u09e2\u09e3\u0a01\u0a02\u0a3c\u0a41\u0a42\u0a47\u0a48\u0a4b-\u0a4d\u0a51\u0a70\u0a71\u0a75\u0a81\u0a82\u0abc\u0ac1-\u0ac5\u0ac7\u0ac8\u0acd\u0ae2\u0ae3\u0b01\u0b3c\u0b3e\u0b3f\u0b41-\u0b44\u0b4d\u0b56\u0b57\u0b62\u0b63\u0b82\u0bbe\u0bc0\u0bcd\u0bd7\u0c3e-\u0c40\u0c46-\u0c48\u0c4a-\u0c4d\u0c55\u0c56\u0c62\u0c63\u0cbc\u0cbf\u0cc2\u0cc6\u0ccc\u0ccd\u0cd5\u0cd6\u0ce2\u0ce3\u0d3e\u0d41-\u0d44\u0d4d\u0d57\u0d62\u0d63\u0dca\u0dcf\u0dd2-\u0dd4\u0dd6\u0ddf\u0e31\u0e34-\u0e3a\u0e47-\u0e4e\u0eb1\u0eb4-\u0eb9\u0ebb\u0ebc\u0ec8-\u0ecd\u0f18\u0f19\u0f35\u0f37\u0f39\u0f71-\u0f7e\u0f80-\u0f84\u0f86\u0f87\u0f90-\u0f97\u0f99-\u0fbc\u0fc6\u102d-\u1030\u1032-\u1037\u1039\u103a\u103d\u103e\u1058\u1059\u105e-\u1060\u1071-\u1074\u1082\u1085\u1086\u108d\u109d\u135f\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17b7-\u17bd\u17c6\u17c9-\u17d3\u17dd\u180b-\u180d\u18a9\u1920-\u1922\u1927\u1928\u1932\u1939-\u193b\u1a17\u1a18\u1a56\u1a58-\u1a5e\u1a60\u1a62\u1a65-\u1a6c\u1a73-\u1a7c\u1a7f\u1b00-\u1b03\u1b34\u1b36-\u1b3a\u1b3c\u1b42\u1b6b-\u1b73\u1b80\u1b81\u1ba2-\u1ba5\u1ba8\u1ba9\u1c2c-\u1c33\u1c36\u1c37\u1cd0-\u1cd2\u1cd4-\u1ce0\u1ce2-\u1ce8\u1ced\u1dc0-\u1de6\u1dfd-\u1dff\u200c\u200d\u20d0-\u20f0\u2cef-\u2cf1\u2de0-\u2dff\u302a-\u302f\u3099\u309a\ua66f-\ua672\ua67c\ua67d\ua6f0\ua6f1\ua802\ua806\ua80b\ua825\ua826\ua8c4\ua8e0-\ua8f1\ua926-\ua92d\ua947-\ua951\ua980-\ua982\ua9b3\ua9b6-\ua9b9\ua9bc\uaa29-\uaa2e\uaa31\uaa32\uaa35\uaa36\uaa43\uaa4c\uaab0\uaab2-\uaab4\uaab7\uaab8\uaabe\uaabf\uaac1\uabe5\uabe8\uabed\udc00-\udfff\ufb1e\ufe00-\ufe0f\ufe20-\ufe26\uff9e\uff9f]/;
   function isExtendingChar(ch) { return ch.charCodeAt(0) >= 768 && extendingChars.test(ch) }
 
-  // Returns a number from the range [`0`; `str.length`] unless `pos` is outside that range.
   function skipExtendingChars(str, pos, dir) {
     while ((dir < 0 ? pos > 0 : pos < str.length) && isExtendingChar(str.charAt(pos))) { pos += dir; }
     return pos
   }
 
-  // Returns the value from the range [`from`; `to`] that satisfies
-  // `pred` and is closest to `from`. Assumes that at least `to`
-  // satisfies `pred`. Supports `from` being greater than `to`.
   function findFirst(pred, from, to) {
-    // At any point we are certain `to` satisfies `pred`, don't know
-    // whether `from` does.
     var dir = from > to ? -1 : 1;
     for (;;) {
       if (from == to) { return from }
@@ -324,8 +287,6 @@
       else { from = mid + dir; }
     }
   }
-
-  // BIDI HELPERS
 
   function iterateBidiSections(order, from, to, f) {
     if (!order) { return f(from, to, "ltr", 0) }
@@ -359,33 +320,8 @@
     return found != null ? found : bidiOther
   }
 
-  // Bidirectional ordering algorithm
-  // See http://unicode.org/reports/tr9/tr9-13.html for the algorithm
-  // that this (partially) implements.
-
-  // One-char codes used for character types:
-  // L (L):   Left-to-Right
-  // R (R):   Right-to-Left
-  // r (AL):  Right-to-Left Arabic
-  // 1 (EN):  European Number
-  // + (ES):  European Number Separator
-  // % (ET):  European Number Terminator
-  // n (AN):  Arabic Number
-  // , (CS):  Common Number Separator
-  // m (NSM): Non-Spacing Mark
-  // b (BN):  Boundary Neutral
-  // s (B):   Paragraph Separator
-  // t (S):   Segment Separator
-  // w (WS):  Whitespace
-  // N (ON):  Other Neutrals
-
-  // Returns null if characters are ordered as they appear
-  // (left-to-right), or an array of sections ({from, to, level}
-  // objects) in the order in which they occur visually.
   var bidiOrdering = (function() {
-    // Character types for codepoints 0 to 0xff
     var lowTypes = "bbbbbbbbbtstwsbbbbbbbbbbbbbbssstwNN%%%NNNNNN,N,N1111111111NNNNNNNLLLLLLLLLLLLLLLLLLLLLLLLLLNNNNNNLLLLLLLLLLLLLLLLLLLLLLLLLLNNNNbbbbbbsbbbbbbbbbbbbbbbbbbbbbbbbbb,N%%%%NNNNLNNNNN%%11NLNNN1LNNNNNLLLLLLLLLLLLLLLLLLLLLLLNLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLN";
-    // Character types for codepoints 0x600 to 0x6f9
     var arabicTypes = "nnnnnnNNr%%r,rNNmmmmmmmmmmmrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrmmmmmmmmmmmmmmmmmmmmmnnnnnnnnnn%nnrrrmrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrmmmmmmmnNmmmmmmrrmmNmmmmrr1111111111";
     function charType(code) {
       if (code <= 0xf7) { return lowTypes.charAt(code) }
@@ -413,30 +349,17 @@
       for (var i = 0; i < len; ++i)
         { types.push(charType(str.charCodeAt(i))); }
 
-      // W1. Examine each non-spacing mark (NSM) in the level run, and
-      // change the type of the NSM to the type of the previous
-      // character. If the NSM is at the start of the level run, it will
-      // get the type of sor.
       for (var i$1 = 0, prev = outerType; i$1 < len; ++i$1) {
         var type = types[i$1];
         if (type == "m") { types[i$1] = prev; }
         else { prev = type; }
       }
-
-      // W2. Search backwards from each instance of a European number
-      // until the first strong type (R, L, AL, or sor) is found. If an
-      // AL is found, change the type of the European number to Arabic
-      // number.
-      // W3. Change all ALs to R.
       for (var i$2 = 0, cur = outerType; i$2 < len; ++i$2) {
         var type$1 = types[i$2];
         if (type$1 == "1" && cur == "r") { types[i$2] = "n"; }
         else if (isStrong.test(type$1)) { cur = type$1; if (type$1 == "r") { types[i$2] = "R"; } }
       }
 
-      // W4. A single European separator between two European numbers
-      // changes to a European number. A single common separator between
-      // two numbers of the same type changes to that type.
       for (var i$3 = 1, prev$1 = types[0]; i$3 < len - 1; ++i$3) {
         var type$2 = types[i$3];
         if (type$2 == "+" && prev$1 == "1" && types[i$3+1] == "1") { types[i$3] = "1"; }
@@ -445,10 +368,6 @@
         prev$1 = type$2;
       }
 
-      // W5. A sequence of European terminators adjacent to European
-      // numbers changes to all European numbers.
-      // W6. Otherwise, separators and terminators change to Other
-      // Neutral.
       for (var i$4 = 0; i$4 < len; ++i$4) {
         var type$3 = types[i$4];
         if (type$3 == ",") { types[i$4] = "N"; }
@@ -461,21 +380,12 @@
         }
       }
 
-      // W7. Search backwards from each instance of a European number
-      // until the first strong type (R, L, or sor) is found. If an L is
-      // found, then change the type of the European number to L.
       for (var i$5 = 0, cur$1 = outerType; i$5 < len; ++i$5) {
         var type$4 = types[i$5];
         if (cur$1 == "L" && type$4 == "1") { types[i$5] = "L"; }
         else if (isStrong.test(type$4)) { cur$1 = type$4; }
       }
 
-      // N1. A sequence of neutrals takes the direction of the
-      // surrounding strong text if the text on both sides has the same
-      // direction. European and Arabic numbers act as if they were R in
-      // terms of their influence on neutrals. Start-of-level-run (sor)
-      // and end-of-level-run (eor) are used at level run boundaries.
-      // N2. Any remaining neutrals take the embedding direction.
       for (var i$6 = 0; i$6 < len; ++i$6) {
         if (isNeutral.test(types[i$6])) {
           var end$1 = (void 0);
@@ -488,11 +398,6 @@
         }
       }
 
-      // Here we depart from the documented algorithm, in order to avoid
-      // building up an actual levels array. Since there are only three
-      // levels (0, 1, 2) in an implementation that doesn't take
-      // explicit embedding into account, we can build up the order on
-      // the fly, without following the level-based algorithm.
       var order = [], m;
       for (var i$7 = 0; i$7 < len;) {
         if (countsAsLeft.test(types[i$7])) {
@@ -3805,12 +3710,6 @@
     if (cm.display.scrollbars.addClass)
       { addClass(cm.display.wrapper, cm.display.scrollbars.addClass); }
   }
-
-  // Operations are used to wrap a series of changes to the editor
-  // state in such a way that each change won't have to update the
-  // cursor and display (which would be awkward, slow, and
-  // error-prone). Instead, display updates are batched and then all
-  // combined and executed at once.
 
   var nextOpId = 0;
   // Start a new operation.
