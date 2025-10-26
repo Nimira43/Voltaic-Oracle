@@ -20,6 +20,7 @@ button {
   font-weight: 500;
   text-transform: uppercase;
   padding: 8px;
+  margin: 5px 0 5px 5px;  
   background: var(--main);
   color: var(--light);
   border: none;
@@ -31,10 +32,16 @@ button:hover {
   background-color: var(--main-dark);
 }
 
+.buttons {
+  border-bottom: 1px solid var(--light);
+  background: var(--dark);
+}
+
 .file-info {
   padding: 8px;
   background: var(--dark);
   color: var(--light);
+  border-top: 1px solid var(--light);
   font-size: 0.8em;
 }
 
