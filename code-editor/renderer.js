@@ -16,4 +16,17 @@ onload = function() {
   newButton.addEventListener('click', handleNewButton)
   saveButton.addEventListener('click', handleSaveButton)
   openButton.addEventListener('click', handleOpenButton)
+
+  editor = CodeMirror(
+    document.getElementById('editor'), {
+      mode: {
+        name: 'javascript',
+        json: 'true'
+      },
+      lineNumbers: true,
+      theme: 'lesser-dark'
+    }
+  )
+
+  updateInfo(null)
 }
