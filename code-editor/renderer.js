@@ -11,7 +11,16 @@ const updateInfo = () => {
     let filename = path.match(/[^/]+$/)[0]
     document.getElementById('filename-span').innerHTML = filename
     document.title = filename
-    
+
+    if (path.match(/.html$/)) {
+      type = 'htmlmixe'
+      typeDisplayed = 'HTML'
+    } else if (path.match(/.css$/)) {
+      type = 'css'
+      typeDisplayed = 'CSS'
+    } else if (path.match(/.js/)) {
+      typeDisplayed = 'Javascript'
+    }
   }
 }
 
