@@ -3,7 +3,13 @@ const { ipcRenderer } = require('electron')
 let newButton, saveButton, openButton
 let editor
 
-const updateInfo = () => {}
+const updateInfo = () => {
+  let typeDisplayed = 'No document loaded.'
+  let type = 'javascript'
+
+  
+}
+
 const handleNewButton = () => {}
 const handleSaveButton = () => {}
 const handleOpenButton = () => {}
