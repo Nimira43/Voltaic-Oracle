@@ -435,19 +435,11 @@
     }
   })();
 
-  // Get the bidi ordering for the given line (and cache it). Returns
-  // false for lines that are fully left-to-right, and an array of
-  // BidiSpan objects otherwise.
   function getOrder(line, direction) {
     var order = line.order;
     if (order == null) { order = line.order = bidiOrdering(line.text, direction); }
     return order
   }
-
-  // EVENT HANDLING
-
-  // Lightweight event framework. on/off also work on DOM nodes,
-  // registering native DOM handlers.
 
   var noHandlers = [];
 
@@ -488,9 +480,6 @@
     for (var i = 0; i < handlers.length; ++i) { handlers[i].apply(null, args); }
   }
 
-  // The DOM events that CodeMirror handles can be overridden by
-  // registering a (non-DOM) handler on the editor for the event name,
-  // and preventDefault-ing the event in that handler.
   function signalDOMEvent(cm, e, override) {
     if (typeof e == "string")
       { e = {type: e, preventDefault: function() { this.defaultPrevented = true; }}; }
@@ -510,8 +499,6 @@
     return getHandlers(emitter, type).length > 0
   }
 
-  // Add on and off methods to a constructor's prototype, to make
-  // registering events on such objects more convenient.
   function eventMixin(ctor) {
     ctor.prototype.on = function(type, f) {on(this, type, f);};
     ctor.prototype.off = function(type, f) {off(this, type, f);};
