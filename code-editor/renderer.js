@@ -3,7 +3,7 @@ const { ipcRenderer } = require('electron')
 let newButton, saveButton, openButton
 let editor
 
-const updateInfo = () => {
+const updateInfo = (path) => {
   let typeDisplayed = 'No document loaded.'
   let type = 'javascript'
 
@@ -13,7 +13,7 @@ const updateInfo = () => {
     document.title = filename
 
     if (path.match(/.html$/)) {
-      type = 'htmlmixe'
+      type = 'htmlmixed'
       typeDisplayed = 'HTML'
     } else if (path.match(/.css$/)) {
       type = 'css'
