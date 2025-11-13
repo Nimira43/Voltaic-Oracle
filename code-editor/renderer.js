@@ -44,7 +44,14 @@ const handleSaveButton = () => {
   }
 }
 
-const handleOpenButton = () => {}
+const handleOpenButton = () => {
+  const fileEntry = ipcRenderer.sendSync('file-open')
+
+  if (fileEntry) {
+    updateInfo(fileEntry.filePath)
+    editor.setValue(fileEntry.content)
+  }
+}
 
 onload = function() {
   newButton = this.document.getElementById('btn-new')
