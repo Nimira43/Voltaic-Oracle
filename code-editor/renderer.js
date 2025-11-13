@@ -28,7 +28,11 @@ const updateInfo = (path) => {
   document.getElementById('type-span').innerHTML = typeDisplayed
 }
 
-const handleNewButton = () => {}
+const handleNewButton = () => {
+  editor.setValue('')
+  updateInfo(null)
+}
+
 const handleSaveButton = () => {}
 const handleOpenButton = () => {}
 
