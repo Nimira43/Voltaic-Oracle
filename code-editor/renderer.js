@@ -33,7 +33,17 @@ const handleNewButton = () => {
   updateInfo(null)
 }
 
-const handleSaveButton = () => {}
+const handleSaveButton = () => {
+  const editorContent = editor.getValue()
+  const filePath = ipcRenderer.sendSync('file-save', editorContent)
+
+  if (!filePath) {
+    alert('Error saving file.')
+  } else {
+    updateInfo(filePath)
+  }
+}
+
 const handleOpenButton = () => {}
 
 onload = function() {
